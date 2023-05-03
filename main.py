@@ -1,6 +1,7 @@
 # Password check pawen
 import requests
 import hashlib
+import sys
 
 
 def request_api_data(query_char):
@@ -10,10 +11,14 @@ def request_api_data(query_char):
         raise RuntimeError(f'Error fetching: {res.status_code}')
     return res
 
+
 def get_password_leaks_count(hashes, hash_to_check):
-    hashes=(line.split(':') for line in hashes.text.splitlines())
+    hashes = (line.split(':') for line in hashes.text.splitlines())
     for h, count in hashes:
-        print (h, count)
+        if h == hash_to_check:
+            return count
+        return 0
+
 
 def pwned_api_check(password):
     sha1password = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
@@ -23,4 +28,13 @@ def pwned_api_check(password):
     return get_password_leaks_count(response, tail)
 
 
-pwned_api_check('password')
+def main(args):
+    for password in args:
+        count = pwned_api_check(password)
+        if count:
+            print(f'Your {password} was found {count} times...you should change your password')
+        else:
+            print(f'Your {password} was NOT found, is´s safe. Carry on')
+
+
+main(sys.argv[1:])
