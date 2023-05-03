@@ -18,4 +18,4 @@ def pwned_api_check(password):
     return response
 
 
-# pwned_api_check('123')
+pwned_api_check('123')
