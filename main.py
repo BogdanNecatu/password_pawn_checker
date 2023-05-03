@@ -39,6 +39,5 @@ def main(password):
         else:
             print(f'Your {password} was NOT found, is´s safe. Carry on')
 
-
 main(input_password)
 
